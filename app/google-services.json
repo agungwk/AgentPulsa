@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "753326276385",
+    "firebase_url": "https://xl-agent-pulsa.firebaseio.com",
+    "project_id": "xl-agent-pulsa",
+    "storage_bucket": "xl-agent-pulsa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753326276385:android:c8d82e42bfb2b84e",
+        "android_client_info": {
+          "package_name": "com.bangjoni.agentpulsa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "753326276385-gc36vgf0s6uvdhnmr3ddo6m174s65t6r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bangjoni.agentpulsa",
+            "certificate_hash": "37D152BB7BD34B67981C2DE6FD2AE025F53812F8"
+          }
+        },
+        {
+          "client_id": "753326276385-cbi7sihnakcjtaefbvjti4lvhubf30bm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw_nkUZ-tmaAX4Q3jgfmWZ925XF8zs5eA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "753326276385-cbi7sihnakcjtaefbvjti4lvhubf30bm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
