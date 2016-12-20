@@ -10,4 +10,99 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.bangjoni.agentpulsa.DetailOrderActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:text="@string/order_code"
+                android:hint="@string/order_code"
+                android:ems="10"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:imeActionLabel="@string/order_code"
+                android:id="@+id/txtOrderCode"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:text="@string/order_detail"
+                android:hint="@string/order_detail"
+                android:ems="10"
+                android:layout_alignParentLeft="true"
+                android:scrollbars="vertical"
+                android:id="@+id/txtOrderDetail"
+                android:imeActionLabel="@string/order_detail"
+                android:layout_below="@id/txtOrderCode"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:text="@string/order_cust_name"
+                android:hint="@string/order_cust_name"
+                android:ems="10"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/txtOrderCustName"
+                android:imeActionLabel="@string/order_cust_name"
+                android:layout_below="@id/txtOrderDetail"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:text="@string/order_cust_phone"
+                android:hint="@string/order_cust_phone"
+                android:ems="10"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/txtOrderCustPhone"
+                android:imeActionLabel="@string/order_cust_phone"
+                android:layout_below="@id/txtOrderCustName"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:text="@string/order_cust_location"
+                android:hint="@string/order_cust_location"
+                android:ems="10"
+                android:layout_alignParentLeft="true"
+                android:scrollbars="vertical"
+                android:id="@+id/txtOrderCustAddress"
+                android:imeActionLabel="@string/order_cust_location"
+                android:layout_below="@id/txtOrderCustPhone"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_cust_location"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/btnRoute"
+                android:layout_below="@id/txtOrderCustAddress"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/accept_order"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/btnAccept"/>
 </RelativeLayout>

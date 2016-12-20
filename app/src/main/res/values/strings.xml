@@ -20,4 +20,13 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="order_code">Kode Order</string>
+    <string name="order_detail">Detail Order</string>
+    <string name="order_cust_name">Nama Pelanggan</string>
+    <string name="order_cust_phone">No. Telp Pelanggan</string>
+    <string name="order_cust_location">Alamat Pelanggan</string>
+    <string name="order_cust_route">Rute ke Pelanggan</string>
+    <string name="accept_order">Terima Order</string>
+
 </resources>

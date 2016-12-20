@@ -7,13 +7,23 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.bangjoni.agentpulsa.MainActivity;
+import com.bangjoni.agentpulsa.db.DBHelper;
+import com.bangjoni.agentpulsa.util.Constants;
+import com.bangjoni.agentpulsa.util.WebRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 public class GeolocationService extends Service {
 
@@ -21,6 +31,12 @@ public class GeolocationService extends Service {
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 60*1000;
     private static final float LOCATION_DISTANCE = 500;
+//    private static final int LOCATION_INTERVAL = 1*1000;
+//    private static final float LOCATION_DISTANCE = 0;
+
+    public Location mLastLocation;
+
+    private DBHelper db;
 
     public GeolocationService() {
     }
@@ -36,11 +52,11 @@ public class GeolocationService extends Service {
     {
         Log.e(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
+        db = new DBHelper(this);
         return START_STICKY;
     }
 
     private class LocationListener implements android.location.LocationListener {
-        Location mLastLocation;
 
         public LocationListener(String provider) {
             Log.e(TAG, "LocationListener " + provider);
@@ -51,6 +67,7 @@ public class GeolocationService extends Service {
         public void onLocationChanged(Location location) {
             Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
+            new SetLastLocationTask().execute(location.getLatitude(), location.getLongitude());
         }
 
         @Override
@@ -80,26 +97,26 @@ public class GeolocationService extends Service {
 
         initializeLocationManager();
 
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(new DetailVoucherActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-////                    ActivityCompat.requestPermissions(new DetailVoucherActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
-//                }
-            }
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-
-
-            }
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    mLocationListeners[1]);
-        } catch (SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-        }
+//        try {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+////                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+////                    ActivityCompat.requestPermissions(new DetailVoucherActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//////                    ActivityCompat.requestPermissions(new DetailVoucherActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+////                }
+//            }
+//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                return;
+//
+//
+//            }
+//            mLocationManager.requestLocationUpdates(
+//                    LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+//                    mLocationListeners[1]);
+//        } catch (SecurityException ex) {
+//            Log.i(TAG, "fail to request location update, ignore", ex);
+//        } catch (IllegalArgumentException ex) {
+//            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+//        }
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -149,6 +166,34 @@ public class GeolocationService extends Service {
         Log.e(TAG, "initializeLocationManager");
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        }
+    }
+
+    private class SetLastLocationTask extends AsyncTask<Double, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Double... params) {
+            try {
+                JSONObject reqObj = new JSONObject();
+                reqObj.put("latitude", String.valueOf(params[0]));
+                reqObj.put("longitude", String.valueOf(params[1]));
+                reqObj.put("id", db.getLoggedInID());
+
+                String responseStr = WebRequest.makeJSONPostCall(Constants.BASE_URL + "updatelocation.php", reqObj);
+                JSONObject respObj = new JSONObject(responseStr);
+
+                if (respObj.has("status")) {
+                    if (TextUtils.equals(respObj.getString("status"), "200")) {
+                        return true;
+                    }
+                }
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage(), e);
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+
+            return null;
         }
     }
 
